@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Dashboard</title>
+</head>
+<body>
+    <h1>CRM Dashboard</h1>
+    <div id="dashboard">
+        <h2>Key Metrics</h2>
+        <div id="metrics"></div>
+    </div>
+    <div id="customers">
+        <h2>Customers</h2>
+        <ul id="customer-list"></ul>
+    </div>
+    <script>
+        async function fetchMetrics() {
+            const response = await fetch('/dashboard');
+            const data = await response.json();
+            document.getElementById('metrics').innerHTML = `
+                <p>Opportunities: ${data.opportunities_count}</p>
+                <p>Interactions: ${data.interactions_count}</p>
+                <p>Customers: ${data.customers_count}</p>
+            `;
+        }
+
+        async function fetchCustomers() {
+            const response = await fetch('/customers');
+            const customers = await response.json();
+            const customerList = document.getElementById('customer-list');
+            customerList.innerHTML = '';
+            customers.forEach(customer => {
+                const li = document.createElement('li');
+                li.textContent = `${customer.name} - ${customer.email}`;
+                customerList.appendChild(li);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchMetrics();
+            fetchCustomers();
+        });
+    </script>
+</body>
+</html>
